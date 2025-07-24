@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Res } from '@nestjs/common';
+import { Controller, Get, Render, Req, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { AppService } from '../service/app.service';
 @Controller()
@@ -13,11 +13,30 @@ export class AppController {
   }
 
   @Get('/admin')
-  getAdmin(@Res() res: Response) {
+  getAdmin(@Res() res: Response,@Req() req: Request) {
     res.render('admin/dashboard', {
       title: 'Trang quản trị',
       layout: 'admin-layout', // layout dành cho admin
       username: 'Admin',
+      currentPath: req.url,
+    });
+  }
+  @Get('/logo')
+  getLogo(@Res() res: Response, @Req() req: Request) {
+    res.render('admin/logo/logoview', {
+      title: 'logo',
+      layout: 'admin-layout', // layout dành cho admin
+      username: 'Admin',
+      currentPath: req.url,
+    });
+  }
+  @Get('/cards')
+  getCards(@Res() res: Response, @Req() req: Request) {
+    res.render('admin/card/cardview', {
+      title: 'card',
+      layout: 'admin-layout', // layout dành cho admin
+      username: 'Admin',
+      currentPath: req.url,
     });
   }
 }
