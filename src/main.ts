@@ -5,6 +5,8 @@ import { join } from 'path';
 import * as expressLayouts from 'express-ejs-layouts';
 
 
+const PORT = parseInt(process.env.PORT as string, 10) || 8088;
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
@@ -22,6 +24,8 @@ async function bootstrap() {
   app.setBaseViewsDir(viewsPath);
   app.setViewEngine('ejs');
 
-  await app.listen(3000);
+   await app.listen(PORT, () => {
+   console.log(`Application running http://localhost:${PORT}`);
+  });
 }
 bootstrap();
