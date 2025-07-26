@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { User } from 'src/models/user/users.model';
 import { IRepository } from '../IRepository';
 

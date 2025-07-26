@@ -22,7 +22,7 @@ import { UsersService } from 'src/service/user/users.service';
 import { User } from 'src/models/user/users.model';
 import { Userdto } from 'src/models/user/userdto';
 
-@Controller({version:'1',path:"users"})
+@Controller("users")
 //@UseGuards(AuthGuard)
 //@Roles('admin', 'member')
 export class UsersController {

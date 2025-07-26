@@ -22,7 +22,7 @@ import storage from 'src/service/file/file.service';
 import { MediaInfo } from 'src/models/file/mediainfo';
 
 
-@Controller({version:'1',path:"files"})
+@Controller("file")
 // @UseGuards(AuthGuard)
 export class FileController {
   @Get('getallfile')
