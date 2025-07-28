@@ -27,18 +27,24 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
+       <% const isSetupOpen = 
+                            currentPath.startsWith('/logo')  || 
+                            currentPath.startsWith('/cards') ||
+                            currentPath.startsWith('/category')
+       ; %>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true"
             aria-controls="collapseTwo">
             <i class="fas fa-fw fa-cog"></i>
             <span>Setup</span>
         </a>
-        <% const isSetupOpen = currentPath.startsWith('/logo') || currentPath.startsWith('/cards'); %>
+      
         <div id="collapseTwo" class="collapse <%= isSetupOpen ? 'show' : '' %>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Parameter Setting</h6>
                 <a class="collapse-item <%= currentPath === '/logo' ? 'active' : '' %>" href="/logo">Logo</a>
                 <a class="collapse-item <%= currentPath === '/cards' ? 'active' : '' %>" href="/cards">Cards</a>
+                <a class="collapse-item <%= currentPath === '/category' ? 'active' : '' %>" href="/category">Category</a>
             </div>
         </div>
     </li>

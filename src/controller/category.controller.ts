@@ -28,7 +28,7 @@ import { Categorydto } from 'src/models/category/categorydto';
 //@UseGuards(AuthGuard)
 //@Roles('admin', 'member')
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CategoryService) { }
   @Get('getall')
   async get(@Query() serachPara: SerachPara, @Res() res: Response) {
     const pagination = new Paginations<Category>();
@@ -42,28 +42,52 @@ export class CategoryController {
     res.status(HttpStatus.OK).json(respo);
   }
   @Get('/')
-  async gets(@Res() res: Response,@Req() req: Request) {
+  async gets(@Res() res: Response, @Req() req: Request) {
     const respo = await this.categoryService.find();
-    res.render('admin/category/categoryview', {
-      title: 'category',
+    res.render('admin/category/list', {
+      title: 'category-list',
       layout: 'admin-layout',
       currentPath: req.url,
+      datas: respo
     });
   }
   @Get('/getbyid/:id')
   async find(@Param('id') id: string, @Res() res: Response) {
     const respo = await this.categoryService.findOne(id);
-    res.status(HttpStatus.OK).json(respo);
+    res.render('admin/category/getitem', {
+      title: 'getitem category',
+      layout: 'admin-layout',
+      currentPath: "/category",
+      datas: respo
+    });
+  }
+  @Get('/addcategory')
+  async addform(@Res() res: Response, @Req() req: Request) {
+    res.render('admin/category/create', {
+      title: 'create category',
+      layout: 'admin-layout',
+      currentPath: "/category",
+    });
   }
   @Post('/addcategory')
   async create(@Body() categorydto: Categorydto, @Res() res: Response) {
     const respo = await this.categoryService.create(categorydto);
-    res.status(HttpStatus.CREATED).json(respo);
+    res.redirect("/category");
   }
-  @Put('/editcategory')
-  async update(@Body() categorydto: Categorydto, @Res() res: Response) {
+  @Get('/editcategory/:id')
+  async editform(@Param('id') id: string, @Res() res: Response) {
+    const respo = await this.categoryService.findOne(id);
+    res.render('admin/category/edit', {
+      title: 'update category',
+      layout: 'admin-layout',
+      currentPath: "/category",
+      datas: respo
+    });
+  }
+  @Post('/editcategory/:id')
+  async edit(@Body() categorydto: Categorydto, @Res() res: Response) {
     const respo = await this.categoryService.update(categorydto);
-    res.status(HttpStatus.OK).json(respo);
+    res.redirect("/category");
   }
   
   @Delete('/deluser/:id')
