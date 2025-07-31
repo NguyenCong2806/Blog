@@ -29,19 +29,19 @@ import { Categorydto } from 'src/models/category/categorydto';
 //@Roles('admin', 'member')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) { }
-  @Get('getall')
+  @Get('/')
   async get(@Query() serachPara: SerachPara, @Res() res: Response) {
     const pagination = new Paginations<Category>();
-
-    pagination.pageindex = serachPara.pageindex;
-    pagination.pagesize = serachPara.pagesize;
+    pagination.pageindex = serachPara.pageindex ?? 1;
+    pagination.pagesize = serachPara.pagesize ?? 10;
     if (serachPara.keyword != null) {
       pagination.condition = { name: { $regex: serachPara.keyword } };
     }
+    console.log(pagination);
     const respo = await this.categoryService.finds(pagination);
     res.status(HttpStatus.OK).json(respo);
   }
-  @Get('/')
+  @Get('/getpage')
   async gets(@Res() res: Response, @Req() req: Request) {
     const respo = await this.categoryService.find();
     res.render('admin/category/list', {
