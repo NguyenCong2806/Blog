@@ -1,0 +1,16 @@
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">
+        <%= pageheading %>
+    </h1>
+    <div>
+        <form action="addcategory" method="post">
+            <div class="mb-3">
+                <label class="form-label">Name Category</label>
+                <input type="text" value="<%= datas.item.name %>"  class="form-control" name="name" readonly>
+            </div>
+        </form>
+    </div>
+
+</div>

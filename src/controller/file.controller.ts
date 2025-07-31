@@ -1,0 +1,79 @@
+/* eslint-disable prettier/prettier */
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  Res,
+  HttpStatus,
+  Get,
+  Param,
+  Delete,
+  //   UseGuards,
+} from '@nestjs/common';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
+import { message } from 'src/constants/message';
+import { httpstatus } from 'src/constants/httpStatus';
+import * as fs from 'fs';
+import ResultData from 'src/models/ResultData';
+import storage from 'src/service/file/file.service';
+import { MediaInfo } from 'src/models/file/mediainfo';
+
+
+@Controller("file")
+// @UseGuards(AuthGuard)
+export class FileController {
+  @Get('getallfile')
+  async getallfile(@Res() res: Response) {
+    const data = fs.readdirSync(process.env.FILE_ROOT as string, {
+      withFileTypes: true,
+    });
+    res.status(200).json(data);
+  }
+  @Delete('deletefile/:filename')
+  async deletefile(@Param('filename') filename: string, @Res() res: Response) {
+    await fs.unlinkSync(process.env.FILE_ROOT + '/' + filename);
+    const _data = new ResultData();
+    _data.item = message.File_deleted;
+    _data.message = message.Delete_Successful;
+    _data.status = true;
+    _data.statuscode = httpstatus.Successful_responses;
+    res.status(200).json(_data);
+  }
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', { storage: storage }))
+  uploadFile(@UploadedFile() file, @Res() res: Response) {
+    const mediaInfo = new MediaInfo();
+    const _data = new ResultData();
+
+    mediaInfo.destination = file.destination;
+    mediaInfo.encoding = file.encoding;
+    mediaInfo.fieldname = file.fieldname;
+    mediaInfo.filename = file.filename;
+    mediaInfo.mimetype = file.mimetype;
+    mediaInfo.originalname = file.originalname;
+    mediaInfo.path = file.path;
+    mediaInfo.size = file.size;
+    mediaInfo.link = process.env.FILE_URL + file.filename;
+    mediaInfo.status = true;
+
+    _data.item = mediaInfo;
+    _data.message = message.Download_data_successfully;
+    _data.status = true;
+    _data.statuscode = httpstatus.Successful_responses;
+
+    res.status(HttpStatus.OK).json(_data);
+  }
+
+  @Post('uploads')
+  @UseInterceptors(
+    FilesInterceptor('files', parseInt(process.env.FILE_UP_COUNT as string), {
+      storage: storage,
+    }),
+  )
+  uploadMultiple(@UploadedFiles() files, @Res() res: Response) {
+    res.status(HttpStatus.OK).json(true);
+  }
+}
